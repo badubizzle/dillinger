@@ -2,8 +2,7 @@
 
 import zmq
 import json
-#from zmq.eventloop import zmqstream
-import zmqstream
+from zmq.eventloop import zmqstream
 from tornado import ioloop
 loop = ioloop.IOLoop.instance()
 

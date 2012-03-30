@@ -1,9 +1,36 @@
-# The Dillinger Tornado
+# Dillinger
 
-Currently, this is just a proof of concept. But, to try it out first install ZeroMQ, then PyZMQ and then install the ExtensionFM fork of Tornado.
+Dillinger is a simple demonstration of how Tornado can use ZeroMQ. 
 
-After that's completed, helloworldo.py can be turned on and it can start answering http requests. They will wait for a zmq response until req_handler.py is turned on. Once that's up, the zmq messages go from the tornado instance in helloworld.py to req_handler, back out from req_handler to helloworldo and then back to the browser.
+The ZMQ stream integrates with Tornado using Tornado's IOStream which gives us nonblocking ZMQ sockets for Tornado. Sweet!
 
-I use the asyncrhonous decorator in Tornado to wait on the zmq sockets and use a map of msg_id's to request handlers to go from the zmq socket back out to clients.
 
-Hopefully this project will improve and become a full framework for using tornado, asynchronous messaging and some sort of document oriented data store.
+## Setting It Up
+
+We have to patch Tornado's ioloop to use the one provided by ZMQ. The provided `surgery.py` script will do that.
+
+You can either download a clean copy of Tornado, which is a submodule of this repo, or you can setup a virtualenv.
+
+
+### Clean Copy
+
+Tornado is a submodule of this repo. You can run the following command to get the source and then play with this project inside this directory.
+
+    $ git submodule update --init
+    $ env PYTHONPATH="." ./surgery.py
+    
+    
+### VirtualEnv
+
+Just run surgery on it's own.
+
+    $ ./surgery.py
+    
+
+## Trying It
+    
+*If you used `env PYTHONPATH="."` above, please use it for both scripts mentioned below.*
+
+Once that's done, turn on `zmqnado.py`. This is the web front-end and is similar to how you'd write your own request handlers.
+
+I provide a `fake_worker.py` as a very basic example of what a worker could look like.

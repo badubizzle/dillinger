@@ -4,18 +4,24 @@
 import uuid
 import json
 import tornado.httpserver
-from tornado import ioloop
 import tornado.web
+from tornado import ioloop
 import zmq
-#from zmq.eventloop import zmqstream
-import zmqstream
+from zmq.eventloop import zmqstream
 
+
+###
+### ZMQ Handling
+###
 
 class ZMQMixin():
     def zmq_send_msg(self, msg, callback):
         msg_id = self.application.zmq_send_msg(msg, callback)
         
-        
+
+###
+### Handler Using ZMQ
+###
 
 class MainHandler(ZMQMixin, tornado.web.RequestHandler):
     @tornado.web.asynchronous
@@ -32,6 +38,9 @@ class MainHandler(ZMQMixin, tornado.web.RequestHandler):
         self.finish()
     
 
+###
+### ZMQ integration in tornado.web.Application
+###
         
 class ZMQApplication(tornado.web.Application):
     def __init__(self, zmq_stream, handlers, *args, **kwargs):
@@ -55,7 +64,11 @@ class ZMQApplication(tornado.web.Application):
         zmq_msg_data = json.loads(zmq_msg_json)
         msg_id = zmq_msg_data['msg_id']
         self._zmq_msg_id_map[msg_id](zmq_msg_data['data'])
-        
+
+
+###
+### Turn service on
+###
 
 if __name__ == "__main__":
     print 'Starting'
